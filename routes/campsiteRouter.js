@@ -101,9 +101,6 @@ campsiteRouter
           err.status = 404;
           return next(err);
         }
-        res.statusCode = 200;
-        res.setHeader("Content-Type", "application/json");
-        res.json(campsites);
       })
       .catch((err) => next(err));
   })
@@ -127,19 +124,14 @@ campsiteRouter
         }
       })
       .catch((err) => next(err));
-    //res.end(
-    //   "Will add campsite: " + req.body.name + "with description" + req.body.description
-    // `Will add the campsite: ${req.body.name} with description: ${req.body.description}`
-    // );
   })
   .put((req, res) => {
     res.statusCode = 403;
     res.end(
-      `PUT request not supported on /campsites/${req.params.campsiteId}/comments`
+      `PUT operation not supported on /campsites/${req.params.campsiteId}/comments`
     );
   })
   .delete((req, res, next) => {
-    //res.end("Deleting all campsites");
     Campsite.findById(req.params.campsiteId)
       .then((campsite) => {
         if (campsite) {
@@ -162,8 +154,9 @@ campsiteRouter
       })
       .catch((err) => next(err));
   });
+
 campsiteRouter
-  .route("/:campsiteId/comments:/commentId")
+  .route("/:campsiteId/comments/:commentId")
   .get((req, res, next) => {
     Campsite.findById(req.params.campsiteId)
       .then((campsite) => {
@@ -186,7 +179,7 @@ campsiteRouter
   .post((req, res) => {
     res.statusCode = 403;
     res.end(
-      `POST operation note supported on /campsites/${req.params.campsiteId}/comments/${req.params.commentId}`
+      `POST operation not supported on /campsites/${req.params.campsiteId}/comments/${req.params.commentId}`
     );
   })
   .put((req, res, next) => {
@@ -220,7 +213,6 @@ campsiteRouter
       .catch((err) => next(err));
   })
   .delete((req, res, next) => {
-    //res.end("Deleting all campsites");
     Campsite.findById(req.params.campsiteId)
       .then((campsite) => {
         if (campsite && campsite.comments.id(req.params.commentId)) {
