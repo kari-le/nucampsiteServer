@@ -1,6 +1,6 @@
 const express = require("express");
 const partnerRouter = express.Router();
-
+const authenticate = require("../authenticate");
 partnerRouter
   .route("/")
   .all((req, res, next) => {
@@ -11,17 +11,17 @@ partnerRouter
   .get((req, res) => {
     res.end("Will send all partners to you");
   })
-  .post((req, res) => {
+  .post(authenticate.verifyUser, (req, res) => {
     res.end(
       //   "Will add partner: " + req.body.name + "with description" + req.body.description
       `Will add the partner: ${req.body.name} with description: ${req.body.description}`
     );
   })
-  .put((req, res) => {
+  .put(authenticate.verifyUser, (req, res) => {
     res.statusCode = 403;
     res.end("PUT request not supported on /partners");
   })
-  .delete((req, res) => {
+  .delete(authenticate.verifyUser, (req, res) => {
     res.end("Deleting all partners");
   });
 
@@ -35,18 +35,18 @@ partnerRouter
   .get((req, res) => {
     res.end(`Will send details of partner ${req.params.partnerId} to you`);
   })
-  .post((req, res) => {
+  .post(authenticate.verifyUser, (req, res) => {
     res.statusCode = 403;
     res.end("POST operation note supported");
   })
-  .put((req, res) => {
+  .put(authenticate.verifyUser, (req, res) => {
     res.write(`Updating the partner: ${req.params.partnerId}`);
     // eventually will update unique partner in database
     res.end(
       ` Will update the partner: ${req.body.name} with description: ${req.body.description}`
     );
   })
-  .delete((req, res) => {
+  .delete(authenticate.verifyUser, (req, res) => {
     // eventually will delete this partner in database
     res.end(`Deleting partner: ${req.params.partnerId}`);
   });
